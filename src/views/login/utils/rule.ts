@@ -13,7 +13,9 @@ const loginRules = reactive(<FormRules>{
       validator: (rule, value, callback) => {
         if (value === "") {
           callback(new Error(transformI18n($t("login.passwordReg"))));
-        } else if (!REGEXP_PWD.test(value)) {
+        }
+        // TODO: 暂时屏蔽
+        else if (import.meta.env.PROD && !REGEXP_PWD.test(value)) {
           callback(new Error(transformI18n($t("login.passwordRuleReg"))));
         } else {
           callback();
