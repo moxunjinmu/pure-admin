@@ -20,6 +20,8 @@ export const TokenKey = "authorized-token";
 
 /** 获取`token` */
 export function getToken(): DataInfo<number> {
+  // console.log("Cookies.get(TokenKey)", Cookies.get(TokenKey));
+
   // 此处与`TokenKey`相同，此写法解决初始化时`Cookies`中不存在`TokenKey`报错
   return Cookies.get(TokenKey)
     ? JSON.parse(Cookies.get(TokenKey))
@@ -35,15 +37,18 @@ export function getToken(): DataInfo<number> {
 export function setToken(data: DataInfo<Date>) {
   let expires = 0;
   const { access, refresh } = data;
+  console.log("access", access, refresh);
+
   expires = new Date(data.expires).getTime(); // 如果后端直接设置时间戳，将此处代码改为expires = data.expires，然后把上面的DataInfo<Date>改成DataInfo<number>即可
-  const cookieString = JSON.stringify({ access, expires });
+  const cookieString = JSON.stringify({ access, refresh, expires });
+  console.log("cookieString", cookieString);
 
-  expires > 0
-    ? Cookies.set(TokenKey, cookieString, {
-        expires: (expires - Date.now()) / 86400000
-      })
-    : Cookies.set(TokenKey, cookieString);
-
+  // expires > 0
+  //   ? Cookies.set(TokenKey, cookieString, {
+  //       expires: (expires - Date.now()) / 86400000
+  //     })
+  //   : Cookies.set(TokenKey, cookieString);
+  Cookies.set(TokenKey, cookieString);
   function setSessionKey(username: string, roles: Array<string>) {
     useUserStoreHook().SET_USERNAME(username);
     useUserStoreHook().SET_ROLES(roles);
@@ -76,4 +81,11 @@ export function removeToken() {
 /** 格式化token（jwt格式） */
 export const formatToken = (token: string): string => {
   return "Bearer " + token;
+};
+
+/** 刷新token*/
+export const refreshToken = (refresh: string) => {
+  const { access, refresh: _refresh } = getToken();
+  const time = new Date(0).getTime();
+  setToken({ access, refresh, expires: time });
 };

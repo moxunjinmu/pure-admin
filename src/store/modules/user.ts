@@ -54,6 +54,8 @@ export const useUserStore = defineStore({
     /** 刷新`token` */
     async handrefresh(data) {
       return new Promise<refreshResult>((resolve, reject) => {
+        console.log("handrefresh", data);
+
         refreshApi(data)
           .then(data => {
             if (data) {

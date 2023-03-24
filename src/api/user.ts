@@ -34,7 +34,13 @@ export const getLogin = (data?: object) => {
   return http.request<UserResult>("post", baseUrlApi("token/"), { data });
 };
 
+// /statistic/
+
 /** 刷新token */
 export const refreshApi = (data?: object) => {
-  return http.request<refreshResult>("post", "/refresh", { data });
+  console.log("refreshApi", data);
+
+  return http.request<refreshResult>("post", baseUrlApi("token/refresh/"), {
+    data
+  });
 };

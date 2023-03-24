@@ -73,7 +73,7 @@ class PureHttp {
           return config;
         }
         /** 请求白名单，放置一些不需要token的接口（通过设置请求白名单，防止token过期后再请求造成的死循环问题） */
-        const whiteList = ["/refresh", "/login"];
+        const whiteList = ["/login"];
         return whiteList.some(v => config.url.indexOf(v) > -1)
           ? config
           : new Promise(resolve => {
@@ -84,6 +84,7 @@ class PureHttp {
                 if (expired) {
                   if (!PureHttp.isRefreshing) {
                     PureHttp.isRefreshing = true;
+
                     // token过期刷新
                     useUserStoreHook()
                       .handrefresh({ refresh: data.refresh })
@@ -135,6 +136,26 @@ class PureHttp {
       (error: PureHttpError) => {
         const $error = error;
         $error.isCancelRequest = Axios.isCancel($error);
+        if (error.response && error.response.status === 403) {
+          const data = getToken();
+          if (!PureHttp.isRefreshing) {
+            PureHttp.isRefreshing = true;
+            console.log("gettoken", data);
+            // token过期刷新
+            useUserStoreHook()
+              .handrefresh({ refresh: data.refresh })
+              .then(res => {
+                const token = res.data.access;
+                error.config.headers["Authorization"] = formatToken(token);
+                PureHttp.requests.forEach(cb => cb(token));
+                PureHttp.requests = [];
+              })
+              .finally(() => {
+                PureHttp.isRefreshing = false;
+              });
+          }
+          return PureHttp.retryOriginalRequest(error.config);
+        }
         // 关闭进度条动画
         NProgress.done();
         // 所有的响应异常 区分来源为取消请求/非取消请求

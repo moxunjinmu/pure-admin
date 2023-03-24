@@ -45,10 +45,15 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {
         "/api": {
-          target: "http://192.168.31.29:8000",
+          target: "http://192.168.1.106:8000",
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, "/api")
         }
+        // "/mock": {
+        //   target: "http://192.168.1.106:8000",
+        //   changeOrigin: true,
+        //   rewrite: path => path.replace(/^\/mock/, "/mock")
+        // }
       }
     },
     plugins: getPluginsList(command, VITE_CDN, VITE_COMPRESSION),

@@ -2,6 +2,7 @@ import App from "./App.vue";
 import router from "./router";
 import { setupStore } from "@/store";
 import ElementPlus from "element-plus";
+import Table from "@pureadmin/table";
 import { useI18n } from "@/plugins/i18n";
 import { getServerConfig } from "./config";
 import { createApp, Directive } from "vue";
@@ -50,7 +51,7 @@ getServerConfig(app).then(async config => {
   await router.isReady();
   injectResponsiveStorage(app, config);
   setupStore(app);
-  app.use(MotionPlugin).use(useI18n).use(ElementPlus);
+  app.use(MotionPlugin).use(useI18n).use(ElementPlus).use(Table);
   // .use(useEcharts);
   // .use(Table);
   // .use(PureDescriptions);

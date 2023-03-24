@@ -32,6 +32,10 @@ menus:
   permission: 权限管理
   permissionPage: 页面权限
   permissionButton: 按钮权限
+  platform: 平台
+  advertise: 广告
+  question: 问题列表
+  questionCategory: 问题分类
 status:
   hsLoad: 加载中...
 login:

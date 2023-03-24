@@ -32,6 +32,10 @@ menus:
   permission: Permission Manage
   permissionPage: Page Permission
   permissionButton: Button Permission
+  platform: platform
+  advertise: advertise
+  question: question list
+  questionCategory: questionCategory
 status:
   hsLoad: Loading...
 login:
